@@ -50,11 +50,10 @@ do
 
 			# write tree 
 			echo "Directory: " >> content.log
-			tree -h -a "$data" >> content.log
+			tree -h    "$data" >> content.log
 
 			# get directory stats
-			dirSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/) 
-			
+			dirSize=$(du -ch "$data" | awk /total/ | xargs -n1 | awk /\[0-9][[:upper:]]/)			
 			#write directory stats
 			echo Size: "$dirSize" >> content.log
 			echo >> content.log
