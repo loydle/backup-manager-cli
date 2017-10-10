@@ -1,0 +1,90 @@
+#!/bin/bash
+
+args=$@
+echo -n backup name\: 
+read name
+
+
+echo
+echo "  counting files..."
+sleep 0.1
+
+# write global logs
+echo >> content.log
+echo "===============================================" >> content.log
+echo  == >> content.log
+echo  == Backup Date: "$(date)" >> content.log
+echo  == Files count: "$#"  >> content.log
+echo  == >> content.log 
+echo "===============================================" >> content.log
+echo >> content.log
+echo "File(s): "  ${args} >> content.log 
+echo >> content.log
+echo >> content.log
+
+# Make archive logs
+for data in "$@"
+do
+		# check for file or directory
+
+		if [ -f "$data" ]; then
+			# is a file 
+			
+			# add filename 
+			echo File Name: "$data" >> content.log
+			echo _MD5_Hash: $(md5 ${data} | cut -d \= -f 2 ) >> content.log
+			# get file stats 
+			fileType=$(stat -x "$data"   | awk /FileType/ | cut -d \: -f 3-10)
+			fileSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/) 
+	
+			# write stats
+			echo File Type:"$fileType" >> content.log
+			echo Size: "$fileSize" >> content.log
+			echo >> content.log
+			echo "-------------" >> content.log
+			echo >> content.log
+		fi
+
+		if [ -d "$data" ]; then
+			# is a directory
+
+			# write tree 
+			echo "Directory: " >> content.log
+			tree -h -a "$data" >> content.log
+
+			# get directory stats
+			dirSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/) 
+			
+			#write directory stats
+			echo Size: "$dirSize" >> content.log
+			echo >> content.log
+			echo "-------------" >> content.log
+			echo >> content.log
+		fi
+	done
+
+
+
+
+echo "  packing archive..."
+sleep 0.5
+echo "  compressing..."
+tar -czf $name.tar $args content.log
+
+echo
+gzip -l $name.tar
+mv $name.tar ~/Backup/$name.tar.gz
+
+echo
+echo "  saved as: ~/Backup/$name.tar.gz"
+echo
+hashMD5=$(md5 ~/Backup/$name.tar.gz | cut -d '=' -f 2) 
+# Save log 
+echo $(date) -  source: $args  "|"  target: $name.tar.gz "|" md5: $hashMD5  >> ~/Backup/backup.log
+
+# delete temp files
+
+rm $(pwd)/content.log
+
+
+
