@@ -10,17 +10,17 @@ echo "  counting files..."
 sleep 0.1
 
 # write global logs
-echo >> content.log
-echo "===============================================" >> content.log
-echo  == >> content.log
-echo  == Backup Date: "$(date)" >> content.log
-echo  == Files count: "$#"  >> content.log
-echo  == >> content.log 
-echo "===============================================" >> content.log
-echo >> content.log
-echo "File(s): "  ${args} >> content.log 
-echo >> content.log
-echo >> content.log
+echo >> backup-content-log.log
+echo "===============================================" >> backup-content-log.log
+echo  == >> backup-content-log.log
+echo  == Backup Date: "$(date)" >> backup-content-log.log
+echo  == Files count: "$#"  >> backup-content-log.log
+echo  == >> backup-content-log.log 
+echo "===============================================" >> backup-content-log.log
+echo >> backup-content-log.log
+echo "File(s): "  ${args} >> backup-content-log.log 
+echo >> backup-content-log.log
+echo >> backup-content-log.log
 
 # Make archive logs
 for data in "$@"
@@ -31,34 +31,34 @@ do
 			# is a file 
 			
 			# add filename 
-			echo File Name: "$data" >> content.log
-			echo _MD5_Hash: $(md5 ${data} | cut -d \= -f 2 ) >> content.log
+			echo File Name: "$data" >> backup-content-log.log
+			echo _MD5_Hash: $(md5 ${data} | cut -d \= -f 2 ) >> backup-content-log.log
 			# get file stats 
 			fileType=$(stat -x "$data"   | awk /FileType/ | cut -d \: -f 3-10)
 			fileSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/) 
 	
 			# write stats
-			echo File Type:"$fileType" >> content.log
-			echo Size: "$fileSize" >> content.log
-			echo >> content.log
-			echo "-------------" >> content.log
-			echo >> content.log
+			echo File Type:"$fileType" >> backup-content-log.log
+			echo Size: "$fileSize" >> backup-content-log.log
+			echo >> backup-content-log.log
+			echo "-------------" >> backup-content-log.log
+			echo >> backup-content-log.log
 		fi
 
 		if [ -d "$data" ]; then
 			# is a directory
 
 			# write tree 
-			echo "Directory: " >> content.log
-			tree -h    "$data" >> content.log
+			echo "Directory: " >> backup-content-log.log
+			tree -h    "$data" >> backup-content-log.log
 
 			# get directory stats
 			dirSize=$(du -ch "$data" | awk /total/ | xargs -n1 | awk /\[0-9][[:upper:]]/)			
 			#write directory stats
-			echo Size: "$dirSize" >> content.log
-			echo >> content.log
-			echo "-------------" >> content.log
-			echo >> content.log
+			echo Size: "$dirSize" >> backup-content-log.log
+			echo >> backup-content-log.log
+			echo "-------------" >> backup-content-log.log
+			echo >> backup-content-log.log
 		fi
 	done
 
@@ -68,7 +68,7 @@ do
 echo "  packing archive..."
 sleep 0.5
 echo "  compressing..."
-tar -czf $name.tar $args content.log
+tar -czf $name.tar $args backup-content-log.log
 
 echo
 gzip -l $name.tar
@@ -83,7 +83,7 @@ echo $(date) -  source: $args  "|"  target: $name.tar.gz "|" md5: $hashMD5  >> ~
 
 # delete temp files
 
-rm $(pwd)/content.log
+rm $(pwd)/backup-content-log.log
 
 
 
