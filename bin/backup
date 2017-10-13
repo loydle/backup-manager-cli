@@ -2,8 +2,8 @@
 
 if [[ "$@" =  "-md" ]]
 	then
-		cat ~/Backup/backup.log | awk '{print $12 "\n" $14, $15 "\n"}'
-		exit 0
+	cat ~/Backup/backup.log | awk '{print $12 "\n" $14, $15 "\n"}'
+	exit 0
 fi
 
 args=$@
