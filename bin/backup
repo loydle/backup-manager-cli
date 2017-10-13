@@ -1,6 +1,14 @@
 #!/bin/bash
 
+if [[ "$@" =  "-md" ]]
+	then
+		cat ~/Backup/backup.log | awk '{print $12 "\n" $14, $15 "\n"}'
+		exit 0
+fi
+
 args=$@
+
+
 echo -n backup name\: 
 read name
 
@@ -78,6 +86,7 @@ echo
 echo "  saved as: ~/Backup/$name.tar.gz"
 echo
 hashMD5=$(md5 ~/Backup/$name.tar.gz | cut -d '=' -f 2) 
+
 # Save log 
 echo $(date) -  source: $args  "|"  target: $name.tar.gz "|" md5: $hashMD5  >> ~/Backup/backup.log
 
