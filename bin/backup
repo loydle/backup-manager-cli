@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# check for special params
+
+# show md5 (-md)
 if [[ "$@" =  "-md" ]]
 	then
 	cat ~/Backup/backup.log | awk '{print $12 "\n" $14, $15 "\n"}'
