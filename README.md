@@ -18,22 +18,21 @@ show list of backup files with md5
 
 `$ git clone https://github.com/loydle/backup-manager-cli.git`
 
-`$ mkdir -p ~/.personal_bin/backup`
+`$ cp [download_directory]/backup-manager-cli/bin/backup /usr/local/bin/backup` 
 
-`$ mv [download_directory]/backup-manager-cli/bin ~/.personal_bin/`
-
-`$ chmod 755 ~/.personal_bin/backup`
+`$ chmod 755 /usr/local/bin/backup`
 
 `$ vim ~/.bash profile`
-
 
 add the following line to ~/.bash_profile 
 
 ```bash
-export PATH=$PATH:.:$HOME/.personal_bin/:
+export PATH=$PATH:.
 
 ```
-### Done! :thumbsup:
+
+
+### Restart terminal, done! :thumbsup:
 
 ----------
 
