@@ -13,6 +13,9 @@
 `$ backup -md` 
 show list of backup files with md5
 
+`$ backup -log`
+show complete logs
+
 ----------
 ## Install 
 
