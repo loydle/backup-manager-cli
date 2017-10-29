@@ -9,7 +9,7 @@
 2. Move archive to ~/Backup 
 3. Create and update logs (md5, size, tree,..)
 
-# Output
+### Options
 `$ backup -md` 
 show list of backup files with md5
 
