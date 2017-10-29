@@ -10,10 +10,10 @@
 3. Create and update logs (md5, size, tree,..)
 
 ### Options
-`$ backup -md` 
+`$ backup -m` 
 show list of backup files with md5
 
-`$ backup -log`
+`$ backup -l`
 show complete logs
 
 ----------
