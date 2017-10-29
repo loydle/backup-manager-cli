@@ -1,20 +1,18 @@
 #!/bin/bash
 
-# check for special params
-
-# show md5 (-md)
+# check for special params options
+# md5
 if [[ "$@" =  "-md" || "$@" = "-md5" || "$@" = "-m"  ]]
 	then
 	cat ~/Backup/backup.log | awk '{print $12 "\n" $14, $15 "\n"}'
 	exit 0
 fi
-
+# logs
 if [[ "$@" = "-log" || "$@" = "-logs" || "$@" = "-l" ]]
         then
         cat ~/Backup/backup.log | less
         exit 0
 fi
-
 
 
 args=$@
