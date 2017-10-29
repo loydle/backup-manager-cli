@@ -14,7 +14,7 @@
 show list of backup files with md5
 
 `$ backup -l`
-show complete logs
+show complete logs informations
 
 ----------
 ## Install 
