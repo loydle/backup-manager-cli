@@ -9,18 +9,15 @@ if [[ "$@" =  "-md" || "$@" = "-md5" || "$@" = "-m"  ]]
 fi
 # logs
 if [[ "$@" = "-log" || "$@" = "-logs" || "$@" = "-l" ]]
-        then
-        cat ~/Backup/backup.log | less
-        exit 0
+	then
+	cat ~/Backup/backup.log | less
+	exit 0
 fi
-
 
 args=$@
 
-
-echo -n backup name\: 
+echo -n backup name\:
 read name
-
 
 echo
 echo "  counting files..."
@@ -32,55 +29,45 @@ echo "===============================================" >> backup-content-log.log
 echo  == >> backup-content-log.log
 echo  == Backup Date: "$(date)" >> backup-content-log.log
 echo  == Files count: "$#"  >> backup-content-log.log
-echo  == >> backup-content-log.log 
+echo  == >> backup-content-log.log
 echo "===============================================" >> backup-content-log.log
 echo >> backup-content-log.log
-echo "File(s): "  ${args} >> backup-content-log.log 
+echo "File(s): "  ${args} >> backup-content-log.log
 echo >> backup-content-log.log
 echo >> backup-content-log.log
 
 # Make archive logs
 for data in "$@"
 do
-		# check for file or directory
+# check for file or directory
+if [ -f "$data" ]; then # is a file, add filename
+	echo File Name: "$data" >> backup-content-log.log
+	echo _MD5_Hash: $(md5 ${data} | cut -d \= -f 2 ) >> backup-content-log.log
+	# get file stats
+	fileType=$(stat -x "$data"   | awk /FileType/ | cut -d \: -f 3-10)
+	fileSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/)
 
-		if [ -f "$data" ]; then
-			# is a file 
-			
-			# add filename 
-			echo File Name: "$data" >> backup-content-log.log
-			echo _MD5_Hash: $(md5 ${data} | cut -d \= -f 2 ) >> backup-content-log.log
-			# get file stats 
-			fileType=$(stat -x "$data"   | awk /FileType/ | cut -d \: -f 3-10)
-			fileSize=$(du -h "$data" | xargs -n1 | awk /[0-9][[:upper:]]/) 
-	
-			# write stats
-			echo File Type:"$fileType" >> backup-content-log.log
-			echo Size: "$fileSize" >> backup-content-log.log
-			echo >> backup-content-log.log
-			echo "-------------" >> backup-content-log.log
-			echo >> backup-content-log.log
-		fi
+	# write stats
+	echo File Type:"$fileType" >> backup-content-log.log
+	echo Size: "$fileSize" >> backup-content-log.log
+	echo >> backup-content-log.log
+	echo "-------------" >> backup-content-log.log
+	echo >> backup-content-log.log
+fi
 
-		if [ -d "$data" ]; then
-			# is a directory
+if [ -d "$data" ]; then # is a directory, write tree
+	echo "Directory: " >> backup-content-log.log
+	tree -h    "$data" >> backup-content-log.log
 
-			# write tree 
-			echo "Directory: " >> backup-content-log.log
-			tree -h    "$data" >> backup-content-log.log
-
-			# get directory stats
-			dirSize=$(du -ch "$data" | awk /total/ | xargs -n1 | awk /\[0-9][[:upper:]]/)			
-			#write directory stats
-			echo Size: "$dirSize" >> backup-content-log.log
-			echo >> backup-content-log.log
-			echo "-------------" >> backup-content-log.log
-			echo >> backup-content-log.log
-		fi
-	done
-
-
-
+	# get directory stats
+	dirSize=$(du -ch "$data" | awk /total/ | xargs -n1 | awk /\[0-9][[:upper:]]/)
+	#write directory stats
+	echo Size: "$dirSize" >> backup-content-log.log
+	echo >> backup-content-log.log
+	echo "-------------" >> backup-content-log.log
+	echo >> backup-content-log.log
+fi
+done
 
 echo "  packing archive..."
 sleep 0.5
@@ -94,14 +81,10 @@ mv $name.tar ~/Backup/$name.tar.gz
 echo
 echo "  saved as: ~/Backup/$name.tar.gz"
 echo
-hashMD5=$(md5 ~/Backup/$name.tar.gz | cut -d '=' -f 2) 
+hashMD5=$(md5 ~/Backup/$name.tar.gz | cut -d '=' -f 2)
 
-# Save log 
+# Save log
 echo $(date) -  source: $args  "|"  target: $name.tar.gz "|" md5: $hashMD5  >> ~/Backup/backup.log
 
 # delete temp files
-
 rm $(pwd)/backup-content-log.log
-
-
-
