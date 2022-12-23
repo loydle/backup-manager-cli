@@ -1,4 +1,4 @@
-# Backup Script
+# Backup Manager CLI
 
 This script allows you to create backups of specified folders or files and store them in a destination folder. It also maintains a log of all the backups that have been created.
 
