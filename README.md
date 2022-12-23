@@ -1,63 +1,52 @@
-# backup-manager-cli 
-> Backup and archive any file or folder with one command.
+# Backup Script
 
+This script allows you to create backups of specified folders or files and store them in a destination folder. It also maintains a log of all the backups that have been created.
+
+## Purpose
+
+The purpose of this script is to provide an easy way to create backups of important files and folders, and store them in a designated location. The script also maintains a log of all the backups that have been created, which includes the date and time of the backup, the destination folder, the source folders, and the list of files included in the backup.
 ## Usage
-`$ backup [file_name] [dir_name] ...` 
 
-## What's done?
-1. Packing / archivings file 
-2. Move archive to ~/Backup 
-3. Create and update logs (md5, size, tree,..)
+To use the script, run the following command:
 
-### Options
-`$ backup -m` 
-show list of backup files with md5
-
-`$ backup -l`
-show complete logs informations
-
-----------
-## Install 
-
-`$ git clone https://github.com/loydle/backup-manager-cli.git`
-
-`$ cp [download_directory]/backup-manager-cli/bin/backup /usr/local/bin/backup` 
-
-`$ chmod 755 /usr/local/bin/backup`
-
-`$ vim ~/.bash profile`
-
-add the following line to ~/.bash_profile 
-
-```bash
-export PATH=$PATH:.
+```
+./backup.sh [-s source_folder]... [-d destination_folder] [-n name] [-l] [-h]
 
 ```
 
+### Options
 
-### Restart terminal, done! :thumbsup:
+* `-s source_folder`: The source folder or file to be included in the backup (can be specified multiple times).
+* `-d destination_folder`: The destination folder for the backup.
+* `-n name`: The name of the backup.
+* `-l`: View the backup log.
+* `-h`: Display the usage message.
 
-----------
+### Examples
 
+To create a backup of the `docs` and `images` folders and store it in the `backups` folder with the name `2022-01-01`, run the following command:
 
-### MIT License
+```
+./backup.sh -s docs -s images -d backups -n "2022-01-01"
+```
 
-2017 DigitalSC.org
+To view the backup log, run the following command:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+```
+./backup.sh -l
+```
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## Log Format
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The log file (`backup.log.md`) is a Markdown file that contains the following information for each backup:
+
+* Date and time of the backup.
+* Destination folder.
+* Source folders.
+* List of files included in the backup.
+
+## Additional Notes
+
+* If the destination folder does not exist, it will be created.
+* The script uses the `zip` command to create a ZIP archive of the source folders and stores it in the destination folder.
+* The script uses the `realpath` command to get the absolute paths of the source folders and the files included in the backup.
